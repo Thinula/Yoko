@@ -1,3 +1,2 @@
 # Othello
-An Othello Engine
-Work in Progress
+An Othello Engine. Work in Progress
