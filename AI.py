@@ -48,7 +48,7 @@ class AI:
          oppMoves = board.getAllValidMoves(oppCol(playerCol))
          bestScore = -INT_MAX
          bestMove = -1
-         #self.posTranspose = {}
+         self.posTranspose = {}
          for i in range(64):
              if (playerMoves & (1 << i)) == 0:
                 continue

@@ -45,6 +45,7 @@ class BitBoard:
 
     def getDiscs(self,playerCol):
         return self.getBlackDiscs() if playerCol == "B" else self.getWhiteDiscs()
+
     # shifts disks in direction direct (not really sure how this works?)
     def shift(self,discs,direct):
         masks = [
@@ -148,18 +149,49 @@ class BitBoard:
         self.blackDiscs ^= capturedDiscs
         self.whiteDiscs ^= capturedDiscs
         
-    def __str__(self):
-        outStr = "\n\n  "
+    def winner(self):
+        if not self.gameOver():
+            return None
+        else:
+            board_str = self.to_string(verbose=False)
+            if board_str.count("B") > board_str.count("W"):
+                return "B"
+            elif board_str.count("B") < board_str.count("W"):
+                return "W"
+            else:
+                return "Tie"
+
+    def to_string(self, verbose=True):
+        if verbose:
+            outStr = "\n\n  "
+        else:
+            outStr = ""
+            
         for i in range(8):
-            if i == 0:
+            if i == 0 and verbose:
                 for j in range(8):
-                    outStr += str(j+1) + " "
+                    outStr += str(j+1) + " "                   
                 outStr += "\n"
-            outStr += str(i+1) + " "
+
+            if verbose:
+                outStr += str(i+1) + " "
             for j in range(8):
-                outStr += self.getCell(i,j) + " "
-            outStr += "\n"
+                cell = self.getCell(i, j)
+                if verbose:
+                    outStr += self.getCell(i,j) + " "
+                else:
+                    if cell == " ":
+                        outStr += "X"
+                    else:
+                        outStr += cell
+
+            if verbose:
+                outStr += "\n"
+                
         return outStr
+
+    def __str__(self):
+        return self.to_string()
 
 
 
