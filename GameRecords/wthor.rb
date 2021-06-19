@@ -1,0 +1,30 @@
+filenames = ARGV.length == 0 ? ["WTH_2019.wtb", "WTH_2018.wtb", "WTH_2017.wtb", "WTH_2016.wtb", "WTH_2015.wtb", "WTH_2014.wtb", "WTH_2013.wtb", "WTH_2012.wtb", "WTH_2011.wtb"] : ARGV
+CLEAN = true
+
+filenames.each do |fn|
+  outputfile = fn.sub(/\.wtb$/i, ".txt")
+  next if File.exist?(outputfile)
+  File.open(fn, "rb") do |f|
+    puts fn
+    File.open(outputfile, "w") do |out|
+      header = f.read(16)
+      hands = header[4...8].unpack("L")[0]
+
+      hands.times do
+        game = f.read(68)
+        break if game.size < 68
+        theo, act = game[6...8].unpack("C*")
+        hands = game[8...68].unpack("C*")
+        begin
+          line = hands.map { |h|  "_ABCDEFGH"[h % 10] + (h / 10).to_s  }.join('').gsub(/(_0)+\Z/, '')
+          if !CLEAN || !line.include?("_0")
+            out.puts line
+          end
+        rescue => e
+          p "error in file, ignoreing", hands
+          break
+        end
+      end
+    end
+  end
+end
